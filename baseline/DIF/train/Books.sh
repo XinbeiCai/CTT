@@ -1,0 +1,1 @@
+python run_recbole.py --gpu_id=0 --model=SASRecD --dataset='Books' --config_files='configs/Books.yaml'

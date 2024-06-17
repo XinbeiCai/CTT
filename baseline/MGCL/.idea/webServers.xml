@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="26c6e612-278d-4ebc-9c00-e3eafb615b73" name="MGCL">
+        <fileTransfer accessType="SFTP" host="172.31.233.205" port="22" sshConfigId="f884f0bb-2d9c-4a01-9f14-523d0a100348" sshConfig="temp_user@172.31.233.205:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

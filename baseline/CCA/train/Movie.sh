@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=1, python CCA.py --dataset_name=Movies_and_TV

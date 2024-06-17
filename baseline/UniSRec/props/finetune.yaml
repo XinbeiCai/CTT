@@ -1,0 +1,19 @@
+data_path: 'dataset/text_data/'
+benchmark_filename: [train, valid, test]
+alias_of_item_id: [item_id_list]
+load_col:
+  inter: [user_id, item_id_list, item_id]
+train_neg_sample_args: ~
+unisrec_transform: ~
+
+topk: [5, 10]
+metrics: [HIT, NDCG]
+valid_metric: NDCG@10
+eval_batch_size: 1024
+stopping_step: 10
+
+eval_args: {split: ['LS': 'valid_and_test'],
+            order: 'TO',
+            group_by: 'user',
+            mode: 'pop100'
+          }

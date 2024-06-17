@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=0, python CCA.py --dataset_name=CDs_and_Vinyl

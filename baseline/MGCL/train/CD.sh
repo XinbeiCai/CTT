@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=0, python main.py --target_domain=CDs_and_Vinyl --source_domain=Books --maxlen=100 --hidden_units=64 --dropout_rate=0.5 --device=cuda --num_epochs=500 --alpha=0.5 --beta=1.0 --gamma=0.25

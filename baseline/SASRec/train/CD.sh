@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=0, python main.py --target_domain=CDs_and_Vinyl  --device=cuda

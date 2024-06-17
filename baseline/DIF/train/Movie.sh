@@ -1,0 +1,1 @@
+python run_recbole.py --gpu_id=1 --model=SASRecD --dataset='Movies_and_TV' --config_files='configs/Movies_and_TV.yaml'

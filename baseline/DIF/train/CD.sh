@@ -1,0 +1,1 @@
+python run_recbole.py --gpu_id=2 --model=SASRecD --dataset='CDs_and_Vinyl' --config_files='configs/CDs_and_Vinyl.yaml'
