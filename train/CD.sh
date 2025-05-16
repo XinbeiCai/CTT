@@ -1,1 +1,1 @@
-CUDA_VISIBLE_DEVICES=0, python main.py --target_domain=CDs_and_Vinyl --source_domain=Books --device=cuda
+CUDA_VISIBLE_DEVICES=1, python main.py --target_domain=CDs_and_Vinyl --source_domain=Books --device=cuda
