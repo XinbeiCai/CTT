@@ -89,6 +89,8 @@ def data_partition(target_domain_fname, source_domain_fname):
     ItemMeanFeatures_emb = {}
     MetaMeanFeatures_emb = {}
 
+    print(f"Index i: {i}, Length of ItemMeanFeatures: {len(ItemMeanFeatures)}")
+
     for i in item_ids_target_domain:
         if i not in item_map:
             item_map[i] = itemnum_target_domain + 1

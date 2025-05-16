@@ -7,7 +7,7 @@ import random
 from tqdm import tqdm
 from utils import data_partition, WarpSampler, evaluate_valid, evaluate_test
 from model import Model
-torch.autograd.set_detect_anomaly(True)
+# torch.autograd.set_detect_anomaly(True)
 import optuna
 
 def setup_seed(seed):
@@ -31,7 +31,7 @@ parser.add_argument('--source_domain', default='Books') # , required=True
 parser.add_argument('--batch_size', type=int, default=128, help='Batch size.')
 parser.add_argument('--lr', type=float, default=0.001, help='Learning rate.')
 parser.add_argument('--maxlen', type=int, default=50, help='Maximum length of sequences.')
-parser.add_argument('--hidden_units', type=int, default=64, help='i.e. latent vector dimensionality.')
+parser.add_argument('--hidden_units', type=int, default=256, help='i.e. latent vector dimensionality.')
 parser.add_argument('--num_blocks', type=int, default=2, help='Number of self-attention blocks.')
 parser.add_argument('--num_heads', type=int, default=1, help='Number of heads for attention.')
 parser.add_argument('--num_epochs', type=int, default=500, help='Number of epochs.')
@@ -40,7 +40,7 @@ parser.add_argument('--l2_emb', type=float, default=0.01)
 parser.add_argument('--random_seed', type=int, default=2024)
 parser.add_argument('--embedding_size', type=int, default=768, help='the embedding size of review.')
 parser.add_argument('--early_stop_epoch', type=int, default=20)
-parser.add_argument('--save_model', type=int, default=1, help='Whether to save the torch model.')
+parser.add_argument('--save_model', type=int, default=0, help='Whether to save the torch model.')
 parser.add_argument('--eva_interval', type=int, default=50, help='Number of epoch interval for evaluation.')
 parser.add_argument('--device', type=str, default='cuda')
 parser.add_argument('--alpha', type=float, default=0.25)
@@ -166,14 +166,16 @@ def train_model(args):
                     fname = fname.format(args.num_epochs, args.lr, args.num_blocks, args.num_heads, args.hidden_units,
                                          args.maxlen,args.alpha)
                     torch.save(model.state_dict(), os.path.join(dir, fname))
-                    return t_valid[1]
+                elif epoch == args.num_epochs:
+                    return t_test[1]
+
 
     sampler.close()
 
 
 def objective(trial, args):
     optuna_args = argparse.Namespace(
-        hidden_units=trial.suggest_categorical('hidden_units', [16, 32, 64, 128, 256]),
+        hidden_units=trial.suggest_categorical('hidden_units', [16, 32, 128, 256]),
         batch_size=trial.suggest_categorical('batch_size', [64, 128, 256]),
         maxlen=trial.suggest_categorical('maxlen', [50, 60, 70, 80, 90, 100]),
         dropout_rate=trial.suggest_categorical('dropout_rate', [0.3, 0.4, 0.5]),
@@ -192,7 +194,7 @@ def objective(trial, args):
 if __name__ == '__main__':
     if args.optimize:
         study = optuna.create_study(direction='maximize')
-        study.optimize(lambda trial: objective(trial, args), n_trials=50)
+        study.optimize(lambda trial: objective(trial, args), n_trials=4)
         print("Best trial:")
         print(study.best_trial.params)
     else:
