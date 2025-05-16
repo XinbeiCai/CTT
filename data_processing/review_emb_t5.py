@@ -8,15 +8,6 @@ from tqdm import tqdm
 import argparse
 import numpy as np
 
-def load_data(filename):
-    try:
-        with open(filename, "rb") as f:
-            x = pickle.load(f)
-    except:
-        x = []
-        print('文件为空')
-    return x
-
 parser = argparse.ArgumentParser()
 parser.add_argument('-x', default='Books', help='category')
 parser.add_argument('-y', default='Movies_and_TV', help='category')
@@ -29,8 +20,7 @@ def review_emb(category_name, type):
     batch_size = 5
     data_directory = '../review_datasets/%s/' % category_name
     data_path = os.path.join(data_directory, '%s_review.csv' % category_name)
-    # df = load_data(data_path)
-    df = pd.read_csv(data_path, header=None, names=['user_id', 'item_id', 'reviews', 'flag'])
+    df = pd.read_csv(data_path, names=['user_id', 'item_id', 'reviews', 'flag'])
     df.reset_index(inplace=True)
 
     # bert_train_embedding

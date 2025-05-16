@@ -8,15 +8,6 @@ from tqdm import tqdm
 import argparse
 import numpy as np
 
-def load_data(filename):
-    try:
-        with open(filename, "rb") as f:
-            x = pickle.load(f)
-    except:
-        x = []
-        print('文件为空')
-    return x
-
 parser = argparse.ArgumentParser()
 parser.add_argument('-x', default='Home_and_Kitchen', help='category')
 parser.add_argument('-y', default='Grocery_and_Gourmet_Food', help='category')

@@ -28,8 +28,8 @@ def review_emb(category_name):
     # read_data
     batch_size = 1024
     data_directory = '../review_datasets/%s/' % category_name
-    data_path = os.path.join(data_directory, '%s_review.dat' % category_name)
-    df = load_data(data_path)
+    data_path = os.path.join(data_directory, '%s_review.csv' % category_name)
+    df = pd.read_csv(data_path, names=['user_id', 'item_id', 'reviews', 'flag'])
     df.reset_index(inplace=True)
 
     # bert_train_embedding
