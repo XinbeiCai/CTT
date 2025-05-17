@@ -36,7 +36,6 @@ def review_emb(category_name, type):
     for i in tqdm(range(batch_num), total=batch_num, ncols=70, leave=False, unit='b'):
         batch = df.loc[batch_size * i:batch_size * (i + 1) - 1, 'reviews'].tolist()
 
-        # 强制转换为字符串
         batch = list(map(str, batch))
 
         try:
@@ -48,10 +47,9 @@ def review_emb(category_name, type):
                 v = torch.mean(outputs.last_hidden_state, dim=1)
                 review_embedding.extend(v.tolist())
         except Exception as e:
-            print(f"[Error] 第 {i} 个 batch 编码失败，错误信息：{e}")
+            print(f"[Error] the {i} batch encoding error，error：{e}")
             continue
 
-    # 确保长度一致
     df = df.iloc[:len(review_embedding)]
     df['review_embedding'] = review_embedding
 

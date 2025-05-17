@@ -1,8 +1,4 @@
-# import torch
-# print(torch.__version__)  # 确保是 2.0.1+cu117
-# print(hasattr(torch, 'compiler'))  # 应该返回 True
-# print(torch.cuda.is_available())  # 应该返回 True
-# print(torch.version.cuda)         # 应该返回你安装的 CUDA 版本（如 11.7 或 11.8）
+
 import os
 import pickle
 import torch
@@ -24,23 +20,19 @@ def review_emb(category_name):
     data_directory = f'../review_datasets/{category_name}/'
     meta_file_path = os.path.join(data_directory, f'{category_name}_meta.csv')
 
-    # 加载模型
     device = torch.device("cuda:2" if torch.cuda.is_available() else "cpu")
     print("Using device:", device)
 
-    # 加载 T5 模型和 tokenizer（替换成你需要的模型，如 'bert-base-uncased'）
-    model_name = "./modernbert"  # 或 "bert-base-uncased"
+    model_name = "./modernbert"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModel.from_pretrained(model_name)
     model.to(device)
     model.eval()
-    # 读取数据
     df = pd.read_csv(meta_file_path, header=None, names=['item_id', 'information'])
     df.reset_index(inplace=True)
 
-    # 分批处理
     information_embedding = []
-    batch_num = (df.shape[0] + batch_size - 1) // batch_size  # 计算总批次数
+    batch_num = (df.shape[0] + batch_size - 1) // batch_size
 
     for i in tqdm(range(batch_num), total=int(batch_num), ncols=70, leave=False, unit='b'):
         if i == batch_num - 1:
@@ -48,50 +40,43 @@ def review_emb(category_name):
         else:
             batch = df.loc[batch_size * i:batch_size * (i + 1) - 1, 'information'].tolist()
 
-        # 批量编码文本（核心改动）
         inputs = tokenizer(
-            batch,  # 直接传入整个batch的文本列表
+            batch,
             padding=True,
             truncation=True,
             max_length=256,
             return_tensors="pt"
         ).to(device)
 
-        # modern bert emb size 768
         with torch.no_grad():
             outputs = model(**inputs)
-            # 平均池化（考虑attention mask）
             embeddings = outputs.last_hidden_state.mean(dim=1)
             information_embedding.extend(embeddings.tolist())
 
-    # 保存结果
     df['meta_embedding'] = information_embedding
     df_information = df.drop(['information'], axis=1)
-    assert len(information_embedding) == len(df), "嵌入数量与数据行数不匹配！"
+    assert len(information_embedding) == len(df), "error！"
 
     InformationInfo = {}
     error_count = 0
 
     for _, row in df_information.iterrows():
         try:
-            # 1. 强制转为字符串并去除首尾空格
             item_str = str(row['item_id']).strip()
 
-            # 2. 检查是否为纯数字（允许负数可加 item_str.lstrip('-').isdigit()）
             if not item_str.isdigit():
-                raise ValueError(f"非数字字符: {item_str}")
+                raise ValueError(f"error: {item_str}")
 
-            # 3. 转换为整数
             itemid = int(item_str)
             InformationInfo[itemid] = row['meta_embedding']
 
         except Exception as e:
             error_count += 1
-            print(f"警告：跳过非法item_id '{row['item_id']}' (错误: {str(e)})")
+            print(f"warn: error item_id '{row['item_id']}' (error: {str(e)})")
             continue
 
     if error_count > 0:
-        print(f"总跳过记录数: {error_count}")
+        print(f"num: {error_count}")
 
     # 写入文件（保持字典格式）
     with open(data_directory + f'{category_name}_meta_emb_modernbert.dat', 'wb') as f:

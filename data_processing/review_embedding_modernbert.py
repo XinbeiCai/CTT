@@ -36,7 +36,6 @@ def review_emb(category_name):
     device = torch.device("cuda:2" if torch.cuda.is_available() else "cpu")
     print("device:", device)
 
-    # 加载 T5 模型和 tokenizer（替换成你需要的模型，如 'bert-base-uncased'）
     model_name = "./modernbert"  # 或 "bert-base-uncased"
     tokenizer = AutoTokenizer.from_pretrained(model_name)
     model = AutoModel.from_pretrained(model_name)
@@ -51,26 +50,22 @@ def review_emb(category_name):
         else:
             batch = df.loc[batch_size * i:batch_size * (i + 1) - 1, 'reviews'].tolist()
 
-        # sentence t5 输出维度 768
         inputs = tokenizer(
-                batch,  # 直接传入整个batch的文本列表
+                batch,
                 padding=True,
                 truncation=True,
                 max_length=256,
                 return_tensors="pt"
             ).to(device)
 
-        # 批量计算嵌入
         with torch.no_grad():
-            # emb size 768
             outputs = model(**inputs)
-            # 平均池化（考虑attention mask）
             embeddings = outputs.last_hidden_state.mean(dim=1)
             review_embedding.extend(embeddings.tolist())
 
     # processing_data
     df['review_embedding'] = review_embedding
-    assert len(review_embedding) == len(df), "嵌入数量与数据行数不匹配！"
+    assert len(review_embedding) == len(df), "error num"
     print('review_%s_emb_done!' % category_name)
 
     return df
@@ -102,10 +97,10 @@ def review_mean(category_name, df):
             ReviewINFO[itemid] = review_embedding
         except Exception as e:
             error_count += 1
-            print(f"警告：跳过非法item_id '{row['item_id']}' (错误: {str(e)})")
+            print(f"warn: error item_id '{row['item_id']}' (error: {str(e)})")
             continue
     if error_count > 0:
-        print(f"总跳过记录数: {error_count}")
+        print(f"num: {error_count}")
 
     with open(data_directory + '%s_review_emb_mean_modernbert.dat' % category_name, 'wb') as f:
         pickle.dump(ReviewINFO, f)

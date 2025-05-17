@@ -42,21 +42,19 @@ def raw_process(category_name):
     with open(data_path, 'r') as f:
         for line in f:
             js = json.loads(line)[0]
-            # print(type(js))  # 检查js是列表还是字典
+            # print(type(js))
             reviews.append(js['reviewText'])
             users_id.append(str(js['reviewerID']))
             items_id.append(str(js['asin']))
             # times.append(int(js['cleanReviewTime']))
             clean_review_time_str = js['cleanReviewTime']
             try:
-                # 假设时间格式是'YYYY-MM-DD'，如果是其他格式，请调整
                 date_obj = datetime.strptime(clean_review_time_str, '%Y-%m-%d')
                 timestamp = int(date_obj.timestamp())
                 times.append(timestamp)
             except ValueError:
-                # 如果日期格式不正确或无法转换，记录错误或使用默认时间
                 print(f"Warning: Failed to convert {clean_review_time_str} to timestamp.")
-                times.append(0)  # 或者其他默认时间
+                times.append(0)
 
     f.close()
 
