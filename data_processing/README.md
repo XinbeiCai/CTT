@@ -9,7 +9,7 @@ This project supports multiple text encoders for processing textual data. You ca
 ### 1. BERT (Default: `bert-base-cased`)
 
 Download the model from Hugging Face:
-🔗 [https://huggingface.co/google-bert/bert-base-cased/tree/main](https://huggingface.co/google-bert/bert-base-cased/tree/main)
+🔗 [https://huggingface.co/google-bert/bert-base-cased](https://huggingface.co/google-bert/bert-base-cased)
 
 **Scripts:**
 
@@ -36,10 +36,10 @@ Download the model from Hugging Face:
 * `review_emb_t5.py`
 * `meta_emb_sentencet5.py`
 
-### 4. Modern BERT (`multilingual-e5-base`)
+### 4. Modern BERT (`modern bert`)
 
 Download the model from Hugging Face:
-🔗 [https://huggingface.co/intfloat/multilingual-e5-base](https://huggingface.co/intfloat/multilingual-e5-base)
+🔗 [https://huggingface.co/answerdotai/ModernBERT-base](https://huggingface.co/answerdotai/ModernBERT-base)
 
 **Scripts:**
 
